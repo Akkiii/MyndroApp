@@ -3,6 +3,7 @@ package com.myndrotest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.myndrotest.adapter.UserListAdapter
@@ -37,17 +38,13 @@ class MainActivity : AppCompatActivity() {
         userAdapter = UserListAdapter(baseContext, userList)
         recyclerView.adapter = userAdapter
 
+        recyclerView.isNestedScrollingEnabled = false
+
         getUserList(0, true)
 
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                val visibleItemCount = layoutManager.childCount
-                val totalItemCount = layoutManager.itemCount
-                val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
-
-                if (visibleItemCount + pastVisibleItems >= totalItemCount && !isLoading && hasMoreData) {
+        scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            if (scrollY == v.getChildAt(0).measuredHeight - v.measuredHeight) {
+                if (!isLoading) {
                     isLoading = true
                     showProgressFooter()
                     getUserList(userList.size, false)
