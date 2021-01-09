@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Myndro</string>
+    <string name="check_connection">Check your internet connection, it might be slow or not available</string>
+</resources>
